@@ -1,0 +1,76 @@
+1. nodupkey会把同by variable里变量有相同值的observation都删掉。这些observation包括那些与by variable里变量有相同值，但与剩下变量有不同值的observation。如，
+input id1 $ id2 $ extra ;
+cards;
+aa ab 3
+aa ab 3
+aa ab 2
+aa ab 1
+;
+
+proc sort nodupkey data=test3;
+by id1 id2;
+run;
+options nocenter;
+proc print data=test3;
+run;
+Obs    id1    id2    extra
+
+
+
+1     aa     ab       3
+
+
+
+2. nodup会把那些仅与by variable里变量有相同值的observation删掉，如
+
+
+
+data test2;
+input id1 $ id2 $ extra ;
+cards;
+aa ab 3
+aa ab 3
+aa ab 2
+
+
+
+aa ab 1
+;
+
+
+
+proc sort nodup data=test2;
+by id1 id2;
+run;
+options nocenter;
+proc print data=test2;
+run;
+Obs    id1    id2    extra
+
+
+
+1     aa     ab       3
+2     aa     ab       2
+3     aa     ab       1
+但要注意的是nodup只会把相邻的且仅具有相同by variable变量值的observation删掉，如
+data test1;
+input id1 $ id2 $ extra ;
+cards;
+aa ab 3
+aa ab 1
+aa ab 2
+aa ab 3
+;
+proc sort nodup data=test1;
+by id1 id2;
+run;
+options nocenter;
+proc print data=test1;
+run;
+Obs    id1    id2    extra
+1     aa     ab       3
+2     aa     ab       1
+3     aa     ab       2
+
+4     aa     ab       3
+﻿﻿
